@@ -1,13 +1,15 @@
 {
   "name": "poker",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": false,
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "PORT=8080 node app.js"
   },
+  "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wrjlewis/Poker"
+    "url": "https://github.com/csi-lk/poker"
   },
   "dependencies": {
     "connect": "~3.6.6",

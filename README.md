@@ -1,12 +1,18 @@
-Poker
-=====
+# Poker
 
-A poker application running on node.js with socket.io, using angularJS on the front-end for data binding.
+A really simple poker application running on node.js with socket.io, using angularJS on the front-end for data binding.
 
-*Install procedure
+## Requirements
 
-You need node and npm installed for this. Then you execute in the terminal:
+Node & Yarn
 
-npm install
+## Quick Start
 
-node app
+```
+yarn
+yarn dev
+```
+
+Then should be available at http://localhost:8080
+
+## Serverside
