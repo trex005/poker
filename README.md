@@ -15,4 +15,12 @@ yarn dev
 
 Then should be available at http://localhost:8080
 
+## Config
+
+Edit the `tables-config.json` file to add or remove tables to play on
+
 ## Serverside
+
+```
+node app.js
+```

@@ -1,0 +1,14 @@
+[
+  {
+    "name": "The Champions Table",
+    "players": 10,
+    "blind": {
+      "big": 4,
+      "small": 2
+    },
+    "buyIn": {
+      "max": "400",
+      "min": "400"
+    }
+  }
+]
