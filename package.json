@@ -12,17 +12,17 @@
     "url": "https://github.com/csi-lk/poker"
   },
   "dependencies": {
-    "connect": "~3.6.6",
-    "errorhandler": "^1.5.0",
-    "express": "~4.16.3",
-    "less": "~3.7.1",
-    "less-middleware": "~3.0.1",
-    "morgan": "^1.9.0",
-    "pug": "~2.0.4",
+    "connect": "~3.7.0",
+    "errorhandler": "^1.5.1",
+    "express": "~4.17.1",
+    "less": "~3.11.1",
+    "less-middleware": "~3.1.0",
+    "morgan": "^1.10.0",
+    "pug": "~3.0.0",
     "serve-favicon": "^2.5.0",
-    "socket.io": "~2.1.1"
+    "socket.io": "~2.3.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.4"
   }
 }
