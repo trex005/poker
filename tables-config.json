@@ -1,14 +1,15 @@
 [
   {
-    "name": "Cairns Can't Backflip",
+    "name": "Friday Night Poker",
+    "requireRegistration":true,
     "players": 10,
     "blind": {
-      "big": 4,
-      "small": 2
+      "big": 50,
+      "small": 25
     },
     "buyIn": {
-      "max": "400",
-      "min": "400"
+      "max": "4000",
+      "min": "2000"
     }
   }
 ]

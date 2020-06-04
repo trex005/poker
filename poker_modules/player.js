@@ -1,3 +1,27 @@
+const bcrypt = require('bcrypt');
+const fs = require('fs');
+const sqlite3 = require('sqlite3').verbose();
+const db_path = "./database/players.sqlite";
+if (!fs.existsSync('./database')){
+    fs.mkdirSync('./database');
+}
+const db = new sqlite3.Database(db_path,(err)=>{
+  if(err)console.log(err.message);
+  else {
+    const PlayersSql = `CREATE TABLE IF NOT EXISTS players (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL UNIQUE,
+      password TEXT,
+      chips INTEGER DEFAULT 4000, --This is the chips the player currently has access to
+      ballance INTEGER DEFAULT -4000 --This is the running balance of player chips (for settling up offline)
+    )`;
+    db.run(PlayersSql,(result,err)=>{
+        if(err)console.log(err.message);
+        else console.log('Connected to ' + db_path);
+    });
+  }
+});
+
 /**
  * The player "class"
  * @param string id (player's id, never changes)
@@ -37,7 +61,67 @@ var Player = function( socket, name, chips ) {
 	// The hand that the player has in the current poker round and its rating
 	this.evaluatedHand = {};
 }
-
+const Login = function(socket,username,password,callback){
+    let sql = `SELECT
+    password,
+    chips
+    FROM
+    players
+    WHERE
+    username = ?`;
+    let query = db.prepare(sql);
+    query.bind({1:username});
+    console.log('player:70');
+    query.get((err,row)=>{
+        if(err){
+            console.log('player:72',err.message);
+            process.exit();
+        }
+        if(typeof row == "undefined"){
+            console.log('player:81',password);
+            bcrypt.hash(password,9,(err,hash)=>{
+                if(err){
+                    console.log('player:79',err.message);
+                    process.exit();
+                }
+                console.log('player:86');
+                sql = `INSERT INTO players (username,password) VALUES (?,?);`
+                query = db.prepare(sql);
+                query.bind({
+                    1:username,
+                    2:hash
+                });
+                query.run((err)=>{
+                    if(err)console.log('player:94',err.message);
+                    Login(socket,username,password,callback);
+                });
+            });
+        } else {
+            bcrypt.compare(password, row.password, function(err, result) {
+                if(result){
+                    console.log('player:102',row);
+                    callback(null,new Player(socket,username,row.chips));
+                } else {
+                    callback(new Error('Invalid username and password'));
+                }
+            });
+        }
+    });
+}
+Player.prototype.save = function(){
+    const sql = 'UPDATE players SET chips = ? WHERE username = ?';
+    let query = db.prepare(sql);
+    let username = this.public.name;
+    let chips = this.chips + this.public.chipsInPlay;
+    console.log('player:115',username,chips);
+    query.run({
+        1:chips,
+        2:username
+    },(err)=>{
+        if(err)console.log('player:118',err.message);
+    });
+    console.log(`Row(s) updated: ${this.changes}`);
+}
 /**
  * Updates the player data when they leave the table
  */
@@ -50,7 +134,7 @@ Player.prototype.leaveTable = function() {
 		// Remove the player from the table
 		this.sittingOnTable = false;
 		this.seat = null;
-	}
+    }
 }
 
 /**
@@ -100,6 +184,7 @@ Player.prototype.bet = function( amount ) {
     }
     this.public.chipsInPlay -= amount;
     this.public.bet += +amount;
+    this.save();
 }
 
 /**
@@ -113,6 +198,7 @@ Player.prototype.raise = function( amount ) {
     }
     this.public.chipsInPlay -= amount;
     this.public.bet += +amount;
+    this.save();
 }
 
 /**
@@ -465,4 +551,4 @@ Player.prototype.evaluateHand = function( board ) {
 	this.evaluatedHand = evaluatedHand;
 }
 
-module.exports = Player;
+module.exports = {Player,Login};

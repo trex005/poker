@@ -131,6 +131,7 @@ Pot.prototype.destributeToWinners = function( players, firstPlayerToAct ) {
     }
     if( winners.length === 1 ) {
       players[winners[0]].public.chipsInPlay += this.pots[i].amount;
+      players[winners[0]].save();
       var htmlHand = '[' + players[winners[0]].evaluatedHand.cards.join(', ') + ']';
       htmlHand = htmlHand.replace(/s/g, '&#9824;').replace(/c/g, '&#9827;').replace(/h/g, '&#9829;').replace(/d/g, '&#9830;');
       messages.push( players[winners[0]].public.name + ' wins the pot (' + this.pots[i].amount + ') with ' + players[winners[0]].evaluatedHand.name + ' ' + htmlHand );
@@ -149,6 +150,7 @@ Pot.prototype.destributeToWinners = function( players, firstPlayerToAct ) {
         }
 
         players[winners[j]].public.chipsInPlay += playersWinnings;
+        players[winners[j]].save();
         var htmlHand = '[' + players[winners[j]].evaluatedHand.cards.join(', ') + ']';
         htmlHand = htmlHand.replace(/s/g, '&#9824;').replace(/c/g, '&#9827;').replace(/h/g, '&#9829;').replace(/d/g, '&#9830;');
         messages.push( players[winners[j]].public.name + ' ties the pot (' + playersWinnings + ') with ' + players[winners[j]].evaluatedHand.name + ' ' + htmlHand );
@@ -172,6 +174,7 @@ Pot.prototype.giveToWinner = function( winner ) {
 
   for( var i=potsCount-1 ; i>=0 ; i-- ) {
     winner.public.chipsInPlay += this.pots[i].amount;
+    winner.save();
     totalAmount += this.pots[i].amount;
   }
 

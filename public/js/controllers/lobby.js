@@ -1,6 +1,7 @@
 app.controller('LobbyController', ['$scope', '$rootScope', '$http', function( $scope, $rootScope, $http ) {
 	$scope.lobbyTables = [];
 	$scope.newScreenName = '';
+	$scope.newPassword = '';
 
 	$http({
 		url: '/lobby-data',
@@ -14,7 +15,7 @@ app.controller('LobbyController', ['$scope', '$rootScope', '$http', function( $s
 	$scope.register = function() {
 		// If there is some trimmed value for a new screen name
 		if( $scope.newScreenName ) {
-			socket.emit( 'register', $scope.newScreenName, function( response ){
+			socket.emit( 'register', $scope.newScreenName, $scope.newPassword, function( response ){
 				if( response.success ){
 					$rootScope.screenName = response.screenName;
 					$rootScope.totalChips = response.totalChips;

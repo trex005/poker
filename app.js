@@ -11,7 +11,8 @@ const io = require("socket.io").listen(server)
 const lessMiddleware = require("less-middleware")
 const path = require("path")
 const Table = require("./poker_modules/table")
-const Player = require("./poker_modules/player")
+const Player = require("./poker_modules/player").Player;
+const Login = require("./poker_modules/player").Login;
 
 app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "pug")
@@ -185,11 +186,12 @@ io.sockets.on("connection", function(socket) {
   /**
    * When a new player enters the application
    * @param string newScreenName
+   * @param string newPassword
    * @param function callback
    */
-  socket.on("register", function(newScreenName, callback) {
+  socket.on("register", function(newScreenName, newPassword, callback) {
     // If a new screen name is posted
-    if (typeof newScreenName !== "undefined") {
+    if (typeof newScreenName !== "undefined" && typeof newPassword !== "undefined") {
       var newScreenName = newScreenName.trim()
       // If the new screen name is not an empty string
       if (newScreenName && typeof players[socket.id] === "undefined") {
@@ -204,18 +206,22 @@ io.sockets.on("connection", function(socket) {
           }
         }
         if (!nameExists) {
-          // Creating the player object
-          players[socket.id] = new Player(socket, newScreenName, 400)
-          callback({
-            success: true,
-            screenName: newScreenName,
-            totalChips: players[socket.id].chips
-          })
+          Login(socket,newScreenName,newPassword,(err,player)=>{
+            if(err){
+              return callback({ success: false, message: err.message });
+            }
+            players[socket.id] = player;
+            return callback({
+              success: true,
+              screenName: newScreenName,
+              totalChips: players[socket.id].chips
+            });
+          });
         } else {
-          callback({ success: false, message: "This name is taken" })
+          callback({ success: false, message: "This name is taken" });
         }
       } else {
-        callback({ success: false, message: "Please enter a screen name" })
+        callback({ success: false, message: "Please enter a screen name and password" })
       }
     } else {
       callback({ success: false, message: "" })

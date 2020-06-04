@@ -6,14 +6,14 @@
         <p class="table-requirements error" ng-show="registerError">
           {{registerError}}
         </p>
-        <input
-          id="screen-name-input"
-          class="form-control"
-          type="text"
-          ng-model="newScreenName"
-          ng-trim="true"
-          required
-        />
+        <input placeholder="Name" id="screen-name-input" class="form-control" type="text" ng-model="newScreenName"
+          ng-trim="true" required />
+        <input placeholder="Password" id="password-input" class="form-control" type="password" ng-model="newPassword"
+          ng-trim="true" required />
+          <!--
+            TODO: Add the ability to have some tables use fake money!
+            <div class="footnote">* Password only required for tables which require registration</div>
+          -->
         <input type="submit" value="Login" class="btn" />
       </form>
     </div>
