@@ -5,10 +5,8 @@ const { Pool } = require('pg');
 console.log(process.env.DATABASE_URL);
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
-});
+    ssl: process.env.DATABASE_URL.indexOf('compute-1.amazonaws.com') === -1 ? false : true
+  });
 //Init the database
 let createPlayersSql = `CREATE TABLE IF NOT EXISTS players (
     id SERIAL,
