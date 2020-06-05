@@ -2,12 +2,13 @@ const bcrypt = require('bcrypt');
 const squel = require("squel");
 const spg = squel.useFlavour('postgres');
 const { Pool } = require('pg');
+const player_table = 'players2';
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: process.env.DATABASE_URL.indexOf('compute-1.amazonaws.com') === -1 ? false : {rejectUnauthorized:false}
+    ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.indexOf('compute-1.amazonaws.com') === -1 ? false : {rejectUnauthorized:false}
   });
 //Init the database
-let createPlayersSql = `CREATE TABLE IF NOT EXISTS players (
+let createPlayersSql = `CREATE TABLE IF NOT EXISTS ` + player_table + ` (
     id SERIAL,
     username TEXT NOT NULL UNIQUE,
     password TEXT,
@@ -64,7 +65,7 @@ const Login = function(socket,username,password,callback){
     let sql = spg.select()
     .field('password')
     .field('chips')
-    .from('players')
+    .from(player_table)
     .where('username = ?',username);
 
     pool.query(sql.toParam(),(err,res)=>{
@@ -79,7 +80,7 @@ const Login = function(socket,username,password,callback){
                     return callback(new Error('Unable to encrypt password. Error code:player--83'));
                 }
                 sql = spg.insert()
-                .into('players')
+                .into(player_table)
                 .set('username',username)
                 .set('password',hash)
                 pool.query(sql.toParam(),(err,res)=>{
@@ -100,7 +101,7 @@ const Login = function(socket,username,password,callback){
 }
 Player.prototype.save = function(){
     let sql = spg.update()
-    .table('players')
+    .table(player_table)
     .set('chips = ?',this.chips + this.public.chipsInPlay)
     .where('username = ?',this.public.name);
     pool.query(sql.toParam(),(err,res)=>{

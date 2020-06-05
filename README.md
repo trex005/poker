@@ -39,3 +39,4 @@ Will be unavailable if table is set to post blinds automatically.
  * Add play and bank time options to `tables-config.json`
 * Add Rabbit Feature
 * Add buttons for pot/half pot bet.
+* Make work with ANY screen size
