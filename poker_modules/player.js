@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const squel = require("squel");
 const spg = squel.useFlavour('postgres');
 const { Pool } = require('pg');
-console.log(process.env.DATABASE_URL);
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: process.env.DATABASE_URL.indexOf('compute-1.amazonaws.com') === -1 ? false : true
