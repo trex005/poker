@@ -310,6 +310,7 @@ function( $scope, $rootScope, $http, $routeParams, $timeout, sounds ) {
 		$scope.myCards[0] = 'card-'+cards[0];
 		$scope.myCards[1] = 'card-'+cards[1];
 		$scope.$digest();
+		sounds.playNewHandSound();
 	});
 
 	// When the user is asked to act and the pot was betted

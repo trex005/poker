@@ -9,7 +9,7 @@ app.factory('sounds', [function() {
 		betSound = document.getElementById("bet-sound"),
 		raiseSound = document.getElementById("raise-sound");
 		turnSound = document.getElementById("turn-sound");
-
+		newHandSound = document.getElementById("new-hand-sound");
     return {
     	playFoldSound: function() {
     		foldSound.play();
@@ -28,6 +28,9 @@ app.factory('sounds', [function() {
     	},
     	playTurnSound: function() {
     		turnSound.play();
+    	},
+    	playNewHandSound: function() {
+    		newHandSound.play();
     	}
     };
 }]);
