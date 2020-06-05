@@ -2,15 +2,13 @@
 Simple poker application running on node.js
 1. Front-end: AngularJS
 2. Communication between front-end and server: socket.io
-3. Database options:
-	1. Default: sqlite3
-	2. PostgreSQL (works on heroku)
+3. Database PostgreSQL (works without configuration on heroku)
 ## Requirements
 Node & Yarn
 ## Instalation
     yarn
     yarn dev
-Then should be available at http://localhost
+Then should be available at http://localhost:8080
 
 The first time each user logs in, their username and password will be securly saved to the database. Their available chips will be tracked along with a lifetime balance.
 ## Config

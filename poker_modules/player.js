@@ -1,27 +1,29 @@
 const bcrypt = require('bcrypt');
-const fs = require('fs');
-const sqlite3 = require('sqlite3').verbose();
-const db_path = "./database/players.sqlite";
-if (!fs.existsSync('./database')){
-    fs.mkdirSync('./database');
-}
-const db = new sqlite3.Database(db_path,(err)=>{
-  if(err)console.log(err.message);
-  else {
-    const PlayersSql = `CREATE TABLE IF NOT EXISTS players (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT NOT NULL UNIQUE,
-      password TEXT,
-      chips INTEGER DEFAULT 4000, --This is the chips the player currently has access to
-      ballance INTEGER DEFAULT -4000 --This is the running balance of player chips (for settling up offline)
-    )`;
-    db.run(PlayersSql,(result,err)=>{
-        if(err)console.log(err.message);
-        else console.log('Connected to ' + db_path);
-    });
-  }
+const squel = require("squel");
+const spg = squel.useFlavour('postgres');
+const { Pool } = require('pg');
+console.log(process.env.DATABASE_URL);
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
-
+//Init the database
+let createPlayersSql = `CREATE TABLE IF NOT EXISTS players (
+    id SERIAL,
+    username TEXT NOT NULL UNIQUE,
+    password TEXT,
+    chips INTEGER DEFAULT 4000, --This is the chips the player currently has access to
+    ballance INTEGER DEFAULT -4000 --This is the running balance of player chips (for settling up offline)
+)`;
+pool.query(createPlayersSql,(err,res)=>{
+    if(err){
+        console.log("Could not initialize Database",err.message);
+        return process.exit(-1);
+    }
+    console.log("Connected to database")
+});
 /**
  * The player "class"
  * @param string id (player's id, never changes)
@@ -62,41 +64,36 @@ var Player = function( socket, name, chips ) {
 	this.evaluatedHand = {};
 }
 const Login = function(socket,username,password,callback){
-    let sql = `SELECT
-    password,
-    chips
-    FROM
-    players
-    WHERE
-    username = ?`;
-    let query = db.prepare(sql);
-    query.bind({1:username});
-    query.get((err,row)=>{
+    let sql = spg.select()
+    .field('password')
+    .field('chips')
+    .from('players')
+    .where('username = ?',username);
+
+    pool.query(sql.toParam(),(err,res)=>{
         if(err){
             console.log('player:72',err.message);
             process.exit();
         }
-        if(typeof row == "undefined"){
+        if(res.rowCount < 1){
             bcrypt.hash(password,9,(err,hash)=>{
                 if(err){
                     console.log('player:79',err.message);
                     return callback(new Error('Unable to encrypt password. Error code:player--83'));
                 }
-                sql = `INSERT INTO players (username,password) VALUES (?,?);`
-                query = db.prepare(sql);
-                query.bind({
-                    1:username,
-                    2:hash
-                });
-                query.run((err)=>{
+                sql = spg.insert()
+                .into('players')
+                .set('username',username)
+                .set('password',hash)
+                pool.query(sql.toParam(),(err,res)=>{
                     if(err)console.log('player:94',err.message);
                     Login(socket,username,password,callback);
                 });
             });
         } else {
-            bcrypt.compare(password, row.password, function(err, result) {
+            bcrypt.compare(password, res.rows[0].password, function(err, result) {
                 if(result){
-                    callback(null,new Player(socket,username,row.chips));
+                    callback(null,new Player(socket,username,res.rows[0].chips));
                 } else {
                     callback(new Error('Invalid username and password'));
                 }
@@ -105,14 +102,11 @@ const Login = function(socket,username,password,callback){
     });
 }
 Player.prototype.save = function(){
-    const sql = 'UPDATE players SET chips = ? WHERE username = ?';
-    let query = db.prepare(sql);
-    let username = this.public.name;
-    let chips = this.chips + this.public.chipsInPlay;
-    query.run({
-        1:chips,
-        2:username
-    },(err)=>{
+    let sql = spg.update()
+    .table('players')
+    .set('chips = ?',this.chips + this.public.chipsInPlay)
+    .where('username = ?',this.public.name);
+    pool.query(sql.toParam(),(err,res)=>{
         if(err)console.log('player:118',err.message);
     });
 }
