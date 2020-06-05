@@ -80,7 +80,7 @@ const Login = function(socket,username,password,callback){
             bcrypt.hash(password,9,(err,hash)=>{
                 if(err){
                     console.log('player:79',err.message);
-                    process.exit();
+                    return callback(new Error('Unable to encrypt password. Error code:player--83'));
                 }
                 sql = `INSERT INTO players (username,password) VALUES (?,?);`
                 query = db.prepare(sql);
