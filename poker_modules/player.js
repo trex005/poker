@@ -71,20 +71,17 @@ const Login = function(socket,username,password,callback){
     username = ?`;
     let query = db.prepare(sql);
     query.bind({1:username});
-    console.log('player:70');
     query.get((err,row)=>{
         if(err){
             console.log('player:72',err.message);
             process.exit();
         }
         if(typeof row == "undefined"){
-            console.log('player:81',password);
             bcrypt.hash(password,9,(err,hash)=>{
                 if(err){
                     console.log('player:79',err.message);
                     process.exit();
                 }
-                console.log('player:86');
                 sql = `INSERT INTO players (username,password) VALUES (?,?);`
                 query = db.prepare(sql);
                 query.bind({
@@ -99,7 +96,6 @@ const Login = function(socket,username,password,callback){
         } else {
             bcrypt.compare(password, row.password, function(err, result) {
                 if(result){
-                    console.log('player:102',row);
                     callback(null,new Player(socket,username,row.chips));
                 } else {
                     callback(new Error('Invalid username and password'));
@@ -113,14 +109,12 @@ Player.prototype.save = function(){
     let query = db.prepare(sql);
     let username = this.public.name;
     let chips = this.chips + this.public.chipsInPlay;
-    console.log('player:115',username,chips);
     query.run({
         1:chips,
         2:username
     },(err)=>{
         if(err)console.log('player:118',err.message);
     });
-    console.log(`Row(s) updated: ${this.changes}`);
 }
 /**
  * Updates the player data when they leave the table
