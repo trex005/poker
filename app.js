@@ -1,7 +1,6 @@
 const express = require("express")
 const favicon = require("serve-favicon")
 const morgan = require("morgan")
-const errorhandler = require("errorhandler")
 const fs = require("fs")
 
 const app = express()
@@ -22,13 +21,6 @@ app.use(favicon(path.join(__dirname, "public", "favicon.ico")))
 app.use(morgan("combined"))
 app.use(lessMiddleware(__dirname + "/public"))
 app.use(express.static(path.join(__dirname, "public")))
-
-// Development Only
-if ("development" == app.get("env")) {
-  //app.use( express.errorHandler() );
-  // only use in development
-  //app.use(errorhandler())
-}
 
 const players = []
 let tables = []
