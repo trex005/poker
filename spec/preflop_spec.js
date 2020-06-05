@@ -16,7 +16,7 @@ function initializeTestTable() {
 	var players = [],
 		table;
 
-		table = new Table( 0, 'Sample 10-handed Table', eventEmitter(0), 10, 2, 1, 200, 40, false );
+		table = new Table( 0, 'Sample 10-handed Table', eventEmitter(0), 10, 2, 1, 200, 40, false, false );
 
 		for( var i=0 ; i<4 ; i++ ) {
 			players[i] = new Player( socket, 'Player_'+i, 1000 );

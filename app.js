@@ -533,6 +533,7 @@ tables = JSON.parse(tablesConfig).map(
       table.blind.small,
       table.buyIn.max,
       table.buyIn.min,
-      false
+      false,
+      table.blind.auto
     )
 )

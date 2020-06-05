@@ -1,4 +1,3 @@
-
 /**
  * The table controller. It keeps track of the data on the interface,
  * depending on the replies from the server.
@@ -296,12 +295,14 @@ function( $scope, $rootScope, $http, $routeParams, $timeout, sounds ) {
 	socket.on( 'postSmallBlind', function( data ) {
 		$scope.actionState = 'postSmallBlind';
 		$scope.$digest();
+		if($scope.table.autoBlinds)$scope.postBlind(true);
 	});
 
 	// When the player is asked to place the big blind
 	socket.on( 'postBigBlind', function( data ) {
 		$scope.actionState = 'postBigBlind';
 		$scope.$digest();
+		if($scope.table.autoBlinds)$scope.postBlind(true);
 	});
 
 	// When the player is dealt cards
@@ -313,6 +314,7 @@ function( $scope, $rootScope, $http, $routeParams, $timeout, sounds ) {
 
 	// When the user is asked to act and the pot was betted
 	socket.on( 'actBettedPot', function() {
+		sounds.playTurnSound();
 		$scope.actionState = 'actBettedPot';
 
 		var proposedBet = +$scope.table.biggestBet + $scope.table.bigBlind;
@@ -322,6 +324,7 @@ function( $scope, $rootScope, $http, $routeParams, $timeout, sounds ) {
 
 	// When the user is asked to act and the pot was not betted
 	socket.on( 'actNotBettedPot', function() {
+		sounds.playTurnSound();
 		$scope.actionState = 'actNotBettedPot';
 
 		$scope.betAmount = $scope.table.seats[$scope.mySeat].chipsInPlay < $scope.table.bigBlind ? $scope.table.seats[$scope.mySeat].chipsInPlay : $scope.table.bigBlind;
@@ -330,6 +333,7 @@ function( $scope, $rootScope, $http, $routeParams, $timeout, sounds ) {
 
 	// When the user is asked to call an all in
 	socket.on( 'actOthersAllIn', function() {
+		sounds.playTurnSound();
 		$scope.actionState = 'actOthersAllIn';
 
 		$scope.$digest();

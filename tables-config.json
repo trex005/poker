@@ -5,7 +5,8 @@
     "players": 10,
     "blind": {
       "big": 50,
-      "small": 25
+      "small": 25,
+      "auto":true
     },
     "buyIn": {
       "max": "4000",
