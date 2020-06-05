@@ -4,7 +4,7 @@ const spg = squel.useFlavour('postgres');
 const { Pool } = require('pg');
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: process.env.DATABASE_URL.indexOf('compute-1.amazonaws.com') === -1 ? false : true
+    ssl: process.env.DATABASE_URL.indexOf('compute-1.amazonaws.com') === -1 ? false : {rejectUnauthorized:false}
   });
 //Init the database
 let createPlayersSql = `CREATE TABLE IF NOT EXISTS players (
