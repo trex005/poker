@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const squel = require("squel");
 const spg = squel.useFlavour('postgres');
 const { Pool } = require('pg');
-const player_table = 'players2';
+const player_table = 'players3';
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.indexOf('compute-1.amazonaws.com') === -1 ? false : {rejectUnauthorized:false}
