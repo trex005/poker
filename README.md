@@ -23,6 +23,7 @@ Edit the `tables-config.json` file to add or remove tables to play on
 * Add `tables-config.json` option for users to automatically post blinds
 * Prevent cards from wrapping on table
 ## TODO
+* Add Time Limit option per table
 * Add ability for users to reset password (will require an email address)
 * Add Admin abilities:
   * Give players additional chips which will deduct it from lifetime balance.
@@ -36,3 +37,5 @@ Will be unavailable for 1.5 seconds after each raise to prevent accedentle calls
 Will be unavailable if table is set to post blinds automatically.
   * Sit out next hand.
  * Add play and bank time options to `tables-config.json`
+* Add Rabbit Feature
+* Add buttons for pot/half pot bet.
