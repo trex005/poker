@@ -19,9 +19,11 @@ Edit the `tables-config.json` file to add or remove tables to play on
     node app.js
 ## Changelog
 ### 1.0.1 (2020-06-10)
-1. Add user tracking, including adding passwords, tracking bankroll and lifetime balance.
-2. Add sound when it is user's turn
-3. Add `tables-config.json` option for users to automatically post blinds
+* Add user tracking, including adding passwords, tracking bankroll and lifetime balance.
+* Add sound when it is user's turn
+* Add shuffle sound when new hand is being dealt
+* Add `tables-config.json` option for users to automatically post blinds
+* Prevent cards from wrapping on table
 ## TODO
 * Add ability for users to reset password (will require an email address)
 * Add Admin abilities:
