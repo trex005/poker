@@ -22,6 +22,7 @@ Edit the `tables-config.json` file to add or remove tables to play on
 * Add shuffle sound when new hand is being dealt
 * Add `tables-config.json` option for users to automatically post blinds
 * Prevent cards from wrapping on table
+* Stop multiple scenarios why server crashes were happening.
 ## TODO
 * Add Time Limit option per table
 * Add ability for users to reset password (will require an email address)
@@ -40,3 +41,7 @@ Will be unavailable if table is set to post blinds automatically.
 * Add Rabbit Feature
 * Add buttons for pot/half pot bet.
 * Make work with ANY screen size
+* Show chips going to winner(s)
+* Add how many hands per hour per table (full session and last X minutes)
+* make folded cards still visibile, but translucent to the player who folded
+* Select text on click for bet box.

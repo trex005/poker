@@ -128,6 +128,7 @@ io.sockets.on("connection", function(socket) {
     if (typeof players[socket.id] !== "undefined") {
       // If the player was sitting on a table
       if (
+        players[socket.id] &&
         players[socket.id].sittingOnTable !== false &&
         typeof tables[players[socket.id].sittingOnTable] !== "undefined"
       ) {
@@ -150,6 +151,7 @@ io.sockets.on("connection", function(socket) {
   socket.on("leaveTable", function(callback) {
     // If the player was sitting on a table
     if (
+      players[socket.id] &&
       players[socket.id].sittingOnTable !== false &&
       tables[players[socket.id].sittingOnTable] !== false
     ) {
@@ -273,6 +275,7 @@ io.sockets.on("connection", function(socket) {
    */
   socket.on("sitIn", function(callback) {
     if (
+      players[socket.id] &&
       players[socket.id].sittingOnTable !== false &&
       players[socket.id].seat !== null &&
       !players[socket.id].public.sittingIn
@@ -323,7 +326,10 @@ io.sockets.on("connection", function(socket) {
    * @param function callback
    */
   socket.on("check", function(callback) {
-    if (players[socket.id] && typeof players[socket.id].sittingOnTable !== "undefined") {
+    if (
+      players[socket.id] &&
+      typeof players[socket.id].sittingOnTable !== "undefined"
+    ) {
       var tableId = players[socket.id].sittingOnTable
       var activeSeat = tables[tableId].public.activeSeat
 
@@ -349,7 +355,9 @@ io.sockets.on("connection", function(socket) {
    * @param function callback
    */
   socket.on("fold", function(callback) {
-    if (players[socket.id].sittingOnTable !== false) {
+    if (
+      players[socket.id] &&
+      players[socket.id].sittingOnTable !== false) {
       var tableId = players[socket.id].sittingOnTable
       var activeSeat = tables[tableId].public.activeSeat
 
@@ -372,7 +380,10 @@ io.sockets.on("connection", function(socket) {
    * @param function callback
    */
   socket.on("call", function(callback) {
-    if (players[socket.id] && typeof players[socket.id].sittingOnTable !== "undefined") {
+    if (
+      players[socket.id] &&
+      typeof players[socket.id].sittingOnTable !== "undefined"
+    ) {
       var tableId = players[socket.id].sittingOnTable
       var activeSeat = tables[tableId].public.activeSeat
 
@@ -397,7 +408,10 @@ io.sockets.on("connection", function(socket) {
    * @param function callback
    */
   socket.on("bet", function(amount, callback) {
-    if (players[socket.id] && typeof players[socket.id].sittingOnTable !== "undefined") {
+    if (
+      players[socket.id] &&
+      typeof players[socket.id].sittingOnTable !== "undefined"
+    ) {
       var tableId = players[socket.id].sittingOnTable
       var activeSeat = tables[tableId].public.activeSeat
 
@@ -429,7 +443,10 @@ io.sockets.on("connection", function(socket) {
    * @param function callback
    */
   socket.on("raise", function(amount, callback) {
-    if (players[socket.id] && typeof players[socket.id].sittingOnTable !== "undefined") {
+    if (
+      players[socket.id] &&
+      typeof players[socket.id].sittingOnTable !== "undefined"
+    ) {
       var tableId = players[socket.id].sittingOnTable
       var activeSeat = tables[tableId].public.activeSeat
 
